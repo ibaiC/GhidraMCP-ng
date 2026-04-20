@@ -146,7 +146,9 @@ jobs:
         [ -f LICENSE ] && cp LICENSE release/
 
         # Dynamic tool count
-        MCP_TOOLS=$(grep -c '@mcp.tool()' bridge_mcp_ghidra.py 2>/dev/null || echo "unknown")
+        BRIDGE_TOOLS=$(grep -c '^@mcp\.tool()' bridge_mcp_ghidra.py 2>/dev/null || echo 0)
+        SERVICE_TOOLS=$(grep -h '@McpTool' src/main/java/com/xebyte/core/*Service.java 2>/dev/null | wc -l)
+        MCP_TOOLS=$((BRIDGE_TOOLS + SERVICE_TOOLS))
 
         cat > release/INSTALLATION.md << INSTEOF
         # GhidraMCP ${VERSION} Installation
@@ -171,9 +173,14 @@ jobs:
     - name: Generate release notes
       run: |
         VERSION="${{ needs.check-version.outputs.new-version }}"
-        MCP_TOOLS=$(grep -c '@mcp.tool()' bridge_mcp_ghidra.py 2>/dev/null || echo "unknown")
-        GUI_EPS=$(grep -c 'createContext(' src/main/java/com/xebyte/GhidraMCPPlugin.java 2>/dev/null || echo "unknown")
-        HEADLESS_EPS=$(grep -c 'createContext(' src/main/java/com/xebyte/headless/GhidraMCPHeadlessServer.java 2>/dev/null || echo "unknown")
+        BRIDGE_TOOLS=$(grep -c '^@mcp\.tool()' bridge_mcp_ghidra.py 2>/dev/null || echo 0)
+        SERVICE_TOOLS=$(grep -h '@McpTool' src/main/java/com/xebyte/core/*Service.java 2>/dev/null | wc -l)
+        MCP_TOOLS=$((BRIDGE_TOOLS + SERVICE_TOOLS))
+        GUI_DIRECT=$(grep -c 'createContext(' src/main/java/com/xebyte/GhidraMCPPlugin.java 2>/dev/null || echo 0)
+        HEADLESS_DIRECT=$(grep -c 'createContext(' src/main/java/com/xebyte/headless/GhidraMCPHeadlessServer.java 2>/dev/null || echo 0)
+        REGISTRY=$(grep -cE '(get|post)\(\s*"/' src/main/java/com/xebyte/core/EndpointRegistry.java 2>/dev/null || echo 0)
+        GUI_EPS=$((GUI_DIRECT + REGISTRY))
+        HEADLESS_EPS=$((HEADLESS_DIRECT + REGISTRY))
 
         # Get commits since last tag
         LAST_TAG=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
@@ -230,7 +237,9 @@ jobs:
     - name: Auto-release summary
       run: |
         VERSION="${{ needs.check-version.outputs.new-version }}"
-        MCP_TOOLS=$(grep -c '@mcp.tool()' bridge_mcp_ghidra.py 2>/dev/null || echo "unknown")
+        BRIDGE_TOOLS=$(grep -c '^@mcp\.tool()' bridge_mcp_ghidra.py 2>/dev/null || echo 0)
+        SERVICE_TOOLS=$(grep -h '@McpTool' src/main/java/com/xebyte/core/*Service.java 2>/dev/null | wc -l)
+        MCP_TOOLS=$((BRIDGE_TOOLS + SERVICE_TOOLS))
         echo "## Auto-Release Created" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "**Version:** $VERSION" >> $GITHUB_STEP_SUMMARY

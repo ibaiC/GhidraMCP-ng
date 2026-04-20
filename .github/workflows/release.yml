@@ -143,7 +143,9 @@ jobs:
         cp LICENSE release/ 2>/dev/null || echo "LICENSE file not found, skipping"
         
         # Create installation instructions
-        MCP_TOOLS=$(grep -c '@mcp.tool()' bridge_mcp_ghidra.py 2>/dev/null || echo "179")
+        BRIDGE_TOOLS=$(grep -c '^@mcp\.tool()' bridge_mcp_ghidra.py 2>/dev/null || echo 0)
+        SERVICE_TOOLS=$(grep -h '@McpTool' src/main/java/com/xebyte/core/*Service.java 2>/dev/null | wc -l)
+        MCP_TOOLS=$((BRIDGE_TOOLS + SERVICE_TOOLS))
         cat > release/INSTALLATION.md << INSTEOF
         # GhidraMCP Installation Instructions
 
@@ -191,8 +193,10 @@ jobs:
       id: release_notes
       run: |
         VERSION="${{ steps.version.outputs.VERSION }}"
-        # Count MCP tools dynamically from bridge
-        MCP_TOOLS=$(grep -c '@mcp.tool()' bridge_mcp_ghidra.py 2>/dev/null || echo "193")
+        # Count MCP tools: bridge @mcp.tool() decorators + service @McpTool annotations
+        BRIDGE_TOOLS=$(grep -c '^@mcp\.tool()' bridge_mcp_ghidra.py 2>/dev/null || echo 0)
+        SERVICE_TOOLS=$(grep -h '@McpTool' src/main/java/com/xebyte/core/*Service.java 2>/dev/null | wc -l)
+        MCP_TOOLS=$((BRIDGE_TOOLS + SERVICE_TOOLS))
         # Count GUI endpoints: direct createContext + shared EndpointRegistry entries
         GUI_DIRECT=$(grep -cP '(?:server|httpServer)\.createContext\(' src/main/java/com/xebyte/GhidraMCPPlugin.java 2>/dev/null || echo "0")
         REGISTRY=$(grep -cP '(?:get|post)\(\s*"/' src/main/java/com/xebyte/core/EndpointRegistry.java 2>/dev/null || echo "0")
@@ -295,7 +299,9 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📦 Artifacts" >> $GITHUB_STEP_SUMMARY
         echo "- **Plugin:** GhidraMCP-${{ steps.version.outputs.VERSION }}.zip" >> $GITHUB_STEP_SUMMARY
-        MCP_TOOLS=$(grep -c '@mcp.tool()' bridge_mcp_ghidra.py 2>/dev/null || echo "179")
+        BRIDGE_TOOLS=$(grep -c '^@mcp\.tool()' bridge_mcp_ghidra.py 2>/dev/null || echo 0)
+        SERVICE_TOOLS=$(grep -h '@McpTool' src/main/java/com/xebyte/core/*Service.java 2>/dev/null | wc -l)
+        MCP_TOOLS=$((BRIDGE_TOOLS + SERVICE_TOOLS))
         echo "- **MCP Server:** bridge_mcp_ghidra.py (${MCP_TOOLS} tools)" >> $GITHUB_STEP_SUMMARY
         echo "- **Dependencies:** requirements.txt" >> $GITHUB_STEP_SUMMARY
         echo "- **Documentation:** README.md, INSTALLATION.md" >> $GITHUB_STEP_SUMMARY
