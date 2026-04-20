@@ -170,7 +170,7 @@ jobs:
         - \`requirements.txt\` - Python dependencies
         - \`README.md\` - Complete documentation
 
-        For detailed documentation, see the [README](https://github.com/bethington/ghidra-mcp#readme).
+        For detailed documentation, see the [README](https://github.com/ibaiC/GhidraMCP-ng#readme).
         INSTEOF
         
         echo "Release artifacts prepared:"
@@ -231,8 +231,8 @@ jobs:
         - **bridge_mcp_ghidra.py** — MCP protocol bridge (${MCP_TOOLS} tools)
         - **requirements.txt** — Python dependencies
 
-        See [CHANGELOG.md](https://github.com/bethington/ghidra-mcp/blob/main/CHANGELOG.md) for detailed release notes.
-        See [README.md](https://github.com/bethington/ghidra-mcp#readme) for full documentation.
+        See [CHANGELOG.md](https://github.com/ibaiC/GhidraMCP-ng/blob/main/CHANGELOG.md) for detailed release notes.
+        See [README.md](https://github.com/ibaiC/GhidraMCP-ng#readme) for full documentation.
         GENEOF
 
     - name: Debug release files

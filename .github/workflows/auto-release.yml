@@ -162,7 +162,7 @@ jobs:
         - bridge_mcp_ghidra.py - MCP server with ${MCP_TOOLS} tools
         - requirements.txt - Python dependencies
 
-        For complete documentation, see [README](https://github.com/bethington/ghidra-mcp#readme).
+        For complete documentation, see [README](https://github.com/ibaiC/GhidraMCP-ng#readme).
         INSTEOF
 
         echo "Release artifacts:"
@@ -201,7 +201,7 @@ jobs:
         4. Install Python bridge: \`pip install -r requirements.txt\`
         5. Run: \`python bridge_mcp_ghidra.py\`
 
-        See [CHANGELOG.md](https://github.com/bethington/ghidra-mcp/blob/main/CHANGELOG.md) for detailed release notes.
+        See [CHANGELOG.md](https://github.com/ibaiC/GhidraMCP-ng/blob/main/CHANGELOG.md) for detailed release notes.
 
         ## Recent Changes
 
