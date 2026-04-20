@@ -56,6 +56,7 @@ MANIFEST
 
 # PyInstaller
 *.manifest
+!src/main/resources/Module.manifest
 *.spec
 
 # =============================================================================
@@ -81,6 +82,8 @@ coverage.xml
 test-results/
 test-reports/
 *.xml
+!pom.xml
+!src/assembly/*.xml
 *.html
 
 # =============================================================================
@@ -343,6 +346,8 @@ lib/*.jar
 *.rej
 .merge_file_*
 *.txt
+!requirements.txt
+!requirements-test.txt
 
 # Archive files
 *.7z
